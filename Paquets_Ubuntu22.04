@@ -1,0 +1,74 @@
+1. Prérequis (si ce n'est pas déjà fait) :
+
+DVWA nécessite un serveur web (Apache), PHP et une base de données (MySQL/MariaDB).
+sudo apt update
+sudo apt upgrade -y
+
+# Installer Apache
+sudo apt install apache2 -y
+
+# Installer PHP et les modules nécessaires
+sudo apt install php libapache2-mod-php php-mysql php-gd php-xml php-soap php-curl php-zip -y
+
+# Installer MySQL
+sudo apt install mysql-server -y
+sudo mysql_secure_installation # Suivez les instructions pour sécuriser votre installation MySQL
+
+2. Télécharger et extraire DVWA :
+cd /var/www/html/ # Ou votre répertoire de documents web
+sudo git clone https://github.com/ethicalhack3r/DVWA.git dvwa
+
+3. Configurer les permissions :
+sudo chown -R www-data:www-data /var/www/html/dvwa
+sudo chmod -R 755 /var/www/html/dvwa
+
+4. Configurer DVWA :
+Copiez le fichier de configuration par défaut et modifiez-le :
+sudo cp /var/www/html/dvwa/config/config.inc.php.dist /var/www/html/dvwa/config/config.inc.php
+sudo nano /var/www/html/dvwa/config/config.inc.php
+
+Dans ce fichier, recherchez les lignes suivantes et modifiez-les pour correspondre à vos informations de base de données :
+$_DVWA[ 'db_user' ] = 'admin'; // L'utilisateur MySQL que vous allez créer
+$_DVWA[ 'db_password' ] = 'Passer2025/'; // Le mot de passe de cet utilisateur
+
+
+5. Configurer la base de données MySQL :
+Connectez-vous à MySQL en tant que root :
+5. Configurer la base de données MySQL :
+Connectez-vous à MySQL en tant que root :
+sudo mysql -u root -p
+
+Une fois connecté au shell MySQL, exécutez les commandes suivantes. Notez la correction de la syntaxe pour GRANT avec IDENTIFIED BY :
+CREATE DATABASE dvwa;
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'Passer2025/';
+ GRANT ALL PRIVILEGES ON dvwa.* TO 'admin'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+
+6. Activer le mod_rewrite (pour les jolies URLs de DVWA si nécessaire) et redémarrer Apache :
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+
+7. Accéder à DVWA :
+
+Ouvrez votre navigateur web et accédez à :
+
+http://<votre_adresse_ip>/dvwa/setup.php
+
+Remplacez <votre_adresse_ip> par l'adresse IP de votre machine Ubuntu (dans votre cas, cela semble être 10.0.0.31).
+
+Sur la page setup.php, cliquez sur le bouton "Create / Reset Database" pour initialiser la base de données de DVWA.
+
+8. Connexion à DVWA :
+
+Après avoir initialisé la base de données, vous serez redirigé vers la page de connexion.
+
+Username (Nom d'utilisateur) : admin
+Password (Mot de passe) : Passer2025/
+Une fois connecté, vous pourrez commencer à utiliser DVWA.
+
+Si vous rencontrez toujours des problèmes, vérifiez les journaux d'erreurs d'Apache :
+sudo tail -f /var/log/apache2/error.log
+
+Cela devrait vous donner plus d'informations sur la raison du "Not Found" ou d'autres erreurs.
+
