@@ -74,3 +74,21 @@ Cela devrait vous donner plus d'informations sur la raison du "Not Found" ou d'a
 
 9 -Par defaut le login c'est admin, et mdp c'est password
 
+10 - Changer le port d'écoute de apache 80 par 8080
+sudo nano /etc/apache2/ports.conf
+Listen 8080
+
+sudo nano /etc/apache2/sites-available/000-default.conf
+<VirtualHost *:8080>
+
+Redémarrer Apache2 :
+sudo systemctl restart apache2.service
+
+Ouvrir le port 8080 dans le pare-feu (UFW) :
+sudo ufw allow 8080/tcp
+sudo ufw reload
+
+Accéder à DVWA après le changement de port
+Une fois toutes ces étapes effectuées, vous devriez pouvoir accéder à DVWA en spécifiant le nouveau port dans votre navigateur :
+
+http://votre_adresse_ip:8080/dvwa/
